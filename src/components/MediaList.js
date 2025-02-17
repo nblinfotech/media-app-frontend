@@ -25,10 +25,9 @@ const MediaList = () => {
     setSelectedMedia(mediaItem);
     setShowModal(true);
     dispatch(incrementViewCount(mediaItem._id)).then((updatedViewCount) => {
-      // Update the selectedMedia state to reflect the new view count
       setSelectedMedia((prev) => ({
           ...prev,
-          views: updatedViewCount // Assuming the updated view count is returned
+          views: updatedViewCount 
       }));
   });
    
@@ -56,17 +55,13 @@ const MediaList = () => {
         shareCount: updatedShareCount,
       }));
   
-      // Display success message
       toast.success('Link copied to clipboard!');
   
-      // Check if Clipboard API is supported
       if (navigator.clipboard) {
-        // Use Clipboard API
         await navigator.clipboard.writeText(link);
       } else {
-        // Fallback for older browsers
         const tempInput = document.createElement('input');
-        tempInput.value = link; // Use the link from the backend response
+        tempInput.value = link; 
         document.body.appendChild(tempInput);
         tempInput.select();
         document.execCommand('copy');
@@ -85,7 +80,6 @@ const MediaList = () => {
   };
 
   const handleUpload = async () => {
-    // Validation: Check for at least one tag and one file
     if (files.length === 0) {
       toast.error('Please select at least one file to upload.');
       return;
@@ -99,41 +93,40 @@ const MediaList = () => {
     files.forEach((file) => {
       formData.append('file', file);
     });
-    formData.append('tags', JSON.stringify(tags)); // Pass tags as JSON string
+    formData.append('tags', JSON.stringify(tags)); 
 
     setUploading(true);
     setUploadProgress(0);
 
-    // Simulating a file upload with a progress bar
     const interval = setInterval(() => {
       setUploadProgress((prev) => {
         if (prev >= 100) {
           clearInterval(interval);
           return 100;
         }
-        return prev + 10; // Increase progress by 10% for demo purposes
+        return prev + 10; 
       });
     }, 200);
 
     try {
-      await dispatch(uploadMedia(formData)); // Dispatch the upload action
+      await dispatch(uploadMedia(formData)); 
       toast.success('Media uploaded successfully!');
-      setTags([]); // Clear tags input after upload
-      setTagInput(''); // Clear the input field
-      setFiles([]); // Clear files after upload
-      setShowUploadModal(false); // Close modal after upload
-      setUploadProgress(0); // Reset upload progress
+      setTags([]); 
+      setTagInput(''); 
+      setFiles([]); 
+      setShowUploadModal(false); 
+      setUploadProgress(0); 
     } catch (error) {
       toast.error('Failed to upload media. Please try again.');
     } finally {
-      setUploading(false); // Stop the dummy upload
+      setUploading(false); 
     }
   };
 
   const addTag = () => {
     if (tagInput.trim() && !tags.includes(tagInput.trim())) {
       setTags((prevTags) => [...prevTags, tagInput.trim()]);
-      setTagInput(''); // Clear input after adding tag
+      setTagInput(''); 
     }
   };
 
@@ -142,7 +135,7 @@ const MediaList = () => {
   };
 
   const resetDropzone = () => {
-    setFiles([]); // Clear selected files
+    setFiles([]); 
   };
 
   return (
@@ -154,7 +147,6 @@ const MediaList = () => {
         Upload Media
       </button>
 
-      {/* Upload Media Modal */}
       {showUploadModal && (
         <div className="modal-overlay" onClick={() => setShowUploadModal(false)}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
@@ -188,7 +180,6 @@ const MediaList = () => {
               />
             </div>
 
-            {/* Display selected files with a close icon */}
             {files.length > 0 && (
               <div className="selected-files">
                 <h5>Selected File:</h5>
